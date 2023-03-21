@@ -27,7 +27,6 @@ if [ -f '/Users/jimmy.saavedra/google-cloud-sdk/completion.zsh.inc' ]; then . '/
 export GONOPROXY="github.com/Unity-Technologies/*"
 export GONOSUMDB="github.cds.internal.unity3d.com/*,gitlab.cds.internal.unity3d.com/*,gitlab.internal.unity3d.com/*,github.com/Unity-Technologies/*"
 export GOPRIVATE="github.com/Unity-Technologies/*"
-export GOPROXY="https://github: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@athens.prd.cds.internal.unity3d.com/"
 
 #export GOROOT=/usr/local/Cellar/go/1.2/libexec/ --> homebrew should install go here***
 #export GOROOT="/opt/homebrew/Cellar/go@1.18/libexec/"
