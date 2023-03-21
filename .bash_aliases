@@ -1,66 +1,50 @@
-# ----------------------------------------------------------------------
+# ------------------------------------------------------------------------
 # Aliases
-# ----------------------------------------------------------------------
+# ------------------------------------------------------------------------
 
 alias cls=clear          # Clear your terminal screen
-alias lsld="ls -ld */"   # List all directories in current directory in long list format
 
-lsl() {
-    cls
-    ls -l -G           # list all files starting with parameter input %1
-}
+alias lsl="ls -l -G"     # List all files in current directory
+alias lsla="ls -la -G"   # List all files and directories (color) in current directory
+alias lsd="ls -ld */"    # List all directories in current directory in long list format
 
-alias lsla="ls -la -G"   # List all files in current directory
 lss() {
-    ls -ld $1*           # list all files starting with parameter input %1
+    ls -ld -G $1*        # list all files starting with parameter input %1
 }
 
-# ----------------------------------------------------------------------
-# Routes
-# Repos route
+# Routes -----------------------------------------------------------------
+# Work
+cdw() {
+    cd ~/Work
+}
+
+# Repos
 cdr() {
-    cd ~/Documents/DEV/"$1"
+    cd ~/Work/Repos/"$1"
 }
 
 alias cathosts="cat /etc/hosts"
 alias vihosts="sudo vi /etc/hosts" 
 
-# ----------------------------------------------------------------------
-# Golang
-alias cdrgo="cd ~/Documents/DEV/Go/goworkspace/src/github.com/zinuhe/"
+# Brew -------------------------------------------------------------------
+alias bupg="brew upgrade"
+alias bo="brew outdated"
+alias bl="brew list --version"
 
-alias gclean="go clean"
-#Delete $GOPATH/bin and the executable in the directory if you used go build.
-gocache() {
-    go clean
-    rm -r ~/$GOPATH/bin/*
-    rm -r ~/$GOPATH/go/bin/*
+bupd(){
+    echo "${YELLOW}brew updated${NOCOLOR}"
+    brew update
+    cls
+    echo "${YELLOW}brew outdated${NOCOLOR}"
+    bo
 }
+# brew leaves | xargs -n1 brew desc --eval-all
 
-#alias grun="go run $(find . -name '*.go' -and -not -name '*_test.go' -maxdepth 1)"
-alias grun="go run"
-
-gtest() {
-    echo "${YELLOW}go test ./... -cover -v${NOCOLOR}"
-    go test ./... -cover -v
-}
-
-gtest2() {
-    echo "${YELLOW}go test -cover -v${NOCOLOR}"
-    go test -cover -v "$@"
-}
-
-gtest3() {
-    echo "${YELLOW}go test $1*.go -cover -v${NOCOLOR}"
-    go test $1*.go -cover -v "$@"
-}
-
-# ----------------------------------------------------------------------
-# Docker
-
+# Docker -----------------------------------------------------------------
 #docker-compose ps --service
 
 alias d-c="docker-compose"
+alias dpsa="docker ps -a"  #list docker containers off
 
 d-cdown() {
     echo "${YELLOW}docker-compose down${NOCOLOR}"
@@ -76,26 +60,53 @@ d() {
     docker $1 $2 $3 $4 $5
 }
 
-# ----------------------------------------------------------------------
-# GIT
+# GCP --------------------------------------------------------------------
+mdi() {
+    echo "${YELLOW}./manual_deploy.sh install --fake-services${NOCOLOR}"
+    ./manual_deploy.sh install --fake-services
+}
 
-#git branch --show-current
+mdu() {
+    echo "${YELLOW}./manual_deploy.sh uninstall${NOCOLOR}"
+    ./manual_deploy.sh uninstall
+}
 
+# GIT --------------------------------------------------------------------
 gb() {
     cls
     echo "${YELLOW}git branch${NOCOLOR}"
-    git branch "$@"
+    git branch
 }
 gbranch() {
     gb
 }
 
+#list both local and remote branches
+gba() {
+    cls
+    echo "${YELLOW}git branch -a${NOCOLOR}"
+    git branch -a
+}
+gbrancha() {
+    gba
+}
+
+#list only remote branches
+gbr() {
+    cls
+    echo "${YELLOW}git branch -r${NOCOLOR}"
+    git branch -r
+}
+gbranchr() {
+    gbr
+}
+
 gco() {
-    echo "${YELLOW}git checkout${NOCOLOR}"
-    git checkout
+    echo "${YELLOW}git checkout $1${NOCOLOR}"
+    git checkout $1
 }
 gcheckout() {
-    gco
+    gco $1
 }
 
 #list the commits waiting to be pushed
@@ -104,6 +115,7 @@ gcherry() {
     git cherry -v
 }
 
+#git commit
 gc() {
     echo "${YELLOW}git commit $1${NOCOLOR}"
     git commit "$@"
@@ -114,17 +126,18 @@ gcommit() {
 
 #git diff --stat --cached origin/branchname
 #It shows commited files with differences.
-
 gdiff() {
     echo "${YELLOW}git diff --stat --cached origin/`git branch --show-current`${NOCOLOR}"
     git diff --stat --cached origin/`git branch --show-current`
 }
 
+#git diff <local-branch-name> <remote-branch-name>
+#It shows differences between current local branch and origin/develop
+# git diff `git branch --show-current` origin/develop
 
 #gf="git fetch"
 #alias gf="echo $gf && $gf"
 #alias gfetch="git fetch"
-
 gf() {
     cls
     echo "${YELLOW}git fetch${NOCOLOR}"
@@ -133,7 +146,6 @@ gf() {
 gfetch() {
     gf
 }
-
 
 gl() {
     cls
@@ -181,24 +193,61 @@ gsgb() {
     git submodule foreach 'git branch'
 }
 
-# ----------------------------------------------------------------------
-# Brew
-alias bupd="brew update"
-alias bupg="brew upgrade"
-alias bo="brew outdated"
-alias bl="brew list --version"
+# forget to create a new branch, and made all your changes in the wrong branch?
+# Moves all your changes to your newly created branch.
+# git switch -c "new_branch"
 
-# ----------------------------------------------------------------------
-# Others
+# Golang -----------------------------------------------------------------
+alias gclean="go clean"
+#Delete $GOPATH/bin and the executable in the directory if you used go build.
+gocache() {
+    go clean
+    rm -r ~/$GOPATH/bin/*
+    rm -r ~/$GOPATH/go/bin/*
+}
+
+#alias grun="go run $(find . -name '*.go' -and -not -name '*_test.go' -maxdepth 1)"
+alias grun="go run"
+
+# To run golangci-lint
+glint() {
+    echo "${YELLOW}golangci-lint run${NOCOLOR}"
+    golangci-lint run
+}
+
+# To run helm linter
+ghelm() {
+    echo "${YELLOW}helm lint .${NOCOLOR}"
+    helm lint .
+}
+
+gtest() {
+    echo "${YELLOW}go test ./... -cover -v${NOCOLOR}"
+    go test ./... -cover -v
+}
+
+gtest2() {
+    echo "${YELLOW}go test -cover -v${NOCOLOR}"
+    go test -cover -v "$@"
+}
+
+gtest3() {
+    echo "${YELLOW}go test $1*.go -cover -v${NOCOLOR}"
+    go test $1*.go -cover -v "$@"
+}
+
+## KUBERNETES ------------------------------------------------------------
+alias k="kubectl"
+
+## Others ----------------------------------------------------------------
 # open ~/.zshrc in using the default editor specified in $EDITOR
 alias ec="subl ~/.zshrc"
 
-# source $HOME/.zshrc
+# source $HOME/.zshrc - to restart the terminal session
 alias sc="source ~/.zshrc"
+# unalias alias-name
 
-# ----------------------------------------------------------------------
-# Testing zone
+## Testing zone ----------------------------------------------------------
 
 #alias abc="find . -type d -depth 1 -exec echo ls -la;"
 #find . -type d -depth 1 -exec echo git --git-dir={}/.git --work-tree=$PWD/{} status \;
-
